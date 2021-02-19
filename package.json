@@ -1,5 +1,5 @@
 {
-  "name": "ImHTML",
+  "name": "ImHUI",
   "version": "0.0.1",
   "description": "",
   "scripts": {
@@ -9,7 +9,7 @@
   "keywords": [
     "UI",
     "ImGUI",
-    "ImHTML",
+    "ImHUI",
     "HTML",
     "JavaScript",
     "TypeScript"

@@ -1,4 +1,4 @@
-import * as ImHTML from './ImHTML.js';
+import * as ImHUI from './ImHUI.js';
 
 const data = {
   str: 'foobar',
@@ -12,20 +12,20 @@ function gs(obj: any, prop: string) {
 }
 
 function renderUI() {
-  ImHTML.start();
-  ImHTML.text(`Hello, world ${123}`);
-  if (ImHTML.button("Save")) {
+  ImHUI.start();
+  ImHUI.text(`Hello, world ${123}`);
+  if (ImHUI.button("Save")) {
     console.log('save');
   }
-  ImHTML.inputText("string", gs(data, 'str'));
-  ImHTML.sliderFloat("float", gs(data, 'v'), 0, 5);
-  ImHTML.inputText("string", gs(data, 'str'));
-  ImHTML.sliderFloat("float", gs(data, 'v'), 0, 15);
+  ImHUI.inputText("string", gs(data, 'str'));
+  ImHUI.sliderFloat("float", gs(data, 'v'), 0, 5);
+  ImHUI.inputText("string", gs(data, 'str'));
+  ImHUI.sliderFloat("float", gs(data, 'v'), 0, 15);
 
-  ImHTML.text(`string ${data.str}`);
-  ImHTML.text(`float ${data.v}`);
+  ImHUI.text(`string ${data.str}`);
+  ImHUI.text(`float ${data.v}`);
 
-  ImHTML.finish();
+  ImHUI.finish();
 }
 
-ImHTML.setup(document.querySelector('#root'), renderUI);
+ImHUI.setup(document.querySelector('#root'), renderUI);
