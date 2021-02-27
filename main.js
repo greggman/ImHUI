@@ -1,5 +1,6 @@
 import { queueUpdate } from './core.js';
 import * as ImHUI from './ImHUI.js';
+import { settings } from './background.js';
 const data = {
     str: 'foobar 😎☀🌴🍹',
     v: 0.5,
@@ -32,6 +33,8 @@ function renderUI() {
     ImHUI.sliderFloat("float", g('v'), 0, 15);
     ImHUI.text(`The string is: ${data.str}`);
     ImHUI.text(`The float is: float ${data.v}`);
+    ImHUI.colorEdit4("Background Color", gs(settings, 'clearColor'));
+    ImHUI.sliderFloat("Vertex Count", gs(settings, 'vertexCount'), 0, 100000);
     ImHUI.end();
     // ---
     ImHUI.begin("My First Tool", g('my_tool_active'), 'MenuBar');

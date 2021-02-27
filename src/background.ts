@@ -252,7 +252,12 @@ const vertexCountLoc = gl.getUniformLocation(prg, 'vertexCount');
 
 gl.useProgram(prg);
 
-const vertexCount = 100000;
+type Color4 = [number, number, number, number];
+
+export const settings = {
+  vertexCount: 100000,
+  clearColor: <Color4>[0.3, 0.3, 0.3, 1],
+};
 
 function render(time: number) {
   resizeCanvasToDisplaySize(<HTMLCanvasElement>gl.canvas);
@@ -260,10 +265,13 @@ function render(time: number) {
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   gl.enable(gl.DEPTH_TEST);
 
+  gl.clearColor(...settings.clearColor);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
   gl.uniform1f(timeLoc, time * 0.001);
   gl.uniform2f(resolutionLoc, gl.canvas.width, gl.canvas.height);
-  gl.uniform1f(vertexCountLoc, vertexCount);
-  gl.drawArrays(gl.TRIANGLES, 0, vertexCount);
+  gl.uniform1f(vertexCountLoc, settings.vertexCount);
+  gl.drawArrays(gl.TRIANGLES, 0, settings.vertexCount);
 
   requestAnimationFrame(render);
 }
