@@ -29,7 +29,6 @@ class ValueDragNode extends Node {
     this.#prompt = prompt;
     this.elem = e('div', {className: 'value-drag'});
     this.elem.addEventListener('mousedown', (e: MouseEvent) => {
-      console.log('mousedown');
       this.#mouseStartX = e.clientX;
       this.#startValue = this.#value;
       window.addEventListener('mousemove', this.#onMouseMove);

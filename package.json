@@ -7,7 +7,7 @@
     "build-ci": "npm run build && npm run copy-src",
     "build-tsc": "tsc",
     "watch": "npm run copy && tsc --watch",
-    "copy": "ldcp index.html build && ldcp ImHUI.css build",
+    "copy": "ldcp index.html build && ldcp ImHUI.css build  && ldcp -R 3rdparty/ build/3rdparty/",
     "copy-src": "ldcp -R src/ build/src/"
   },
   "keywords": [
