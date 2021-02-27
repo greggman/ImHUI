@@ -7,6 +7,7 @@ const data = {
     vd: 0.5,
     my_tool_active: true,
     my_first_tool: true,
+    fps: 0,
     my_color: [0.9, 0.7, 0.5, 1.0],
     my_values: new Array(120).fill(0),
     my_random: new Array(120).fill(0),
@@ -51,6 +52,7 @@ function renderUI() {
     }
     // Edit a color (stored as ~4 floats)
     ImHUI.colorEdit4("Color", g('my_color'));
+    ImHUI.text(`fps: ${data.fps.toFixed(1)}`);
     // Plot some values
     ImHUI.plotLines("Frame Times", data.my_values, 0, 1000 / 30);
     ImHUI.plotLines("Sine Wave", data.my_random, -1.1, 1.1);
@@ -78,6 +80,7 @@ function shiftArray(array, v) {
 let then = 0;
 function render(now) {
     const elapsedTime = now - then;
+    data.fps = 1000 / elapsedTime;
     shiftArray(data.my_values, elapsedTime);
     then = now;
     shiftArray(data.my_random, Math.sin(now * 0.01));
