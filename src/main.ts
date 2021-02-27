@@ -26,7 +26,7 @@ function g(prop: string) {
 function renderUI() {
   ImHUI.start();
 
-  ImHUI.begin("My First Tool", g('my_first_active'), 'MenuBar');
+  ImHUI.begin("Test Window", g('my_first_active'), 'MenuBar');
     ImHUI.text(`Hello, world 🌐 ${123}`);
     if (ImHUI.button("Save")) {
       console.log('save');
