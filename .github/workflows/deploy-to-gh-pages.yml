@@ -21,7 +21,7 @@ jobs:
       - name: Install and Build 🏭
         run: |
           npm i
-          npm run build
+          npm run build-ci
 
       - name: Deploy 📦
         if: ${{ github.event_name == 'push' }}
