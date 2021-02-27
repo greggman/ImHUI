@@ -2,6 +2,15 @@
 <link rel="stylesheet" href="ImHUI.css">
 <body>
   <div id="root" class="layout-scrollbar"></div>
+  <canvas id="bg" style="
+     left: 0;
+     top: 0;
+     width: 100%;
+     height: 100%;
+     position: absolute;
+     z-index: -1;
+  "></canvas>
 </body>
 <script src="3rdparty/scrollbars.js"></script>
 <script type="module" src="main.js"></script>
+<script type="module" src="background.js"></script>

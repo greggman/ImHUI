@@ -61,6 +61,23 @@ The pluses are
   feature to look at. With HTML, it's far easier for the browser
   and or OS to look into the content of the elements.
 
+* Automatic zoom support
+
+  The browser zooms. No work required on your part
+
+* Automatic HD-DPI support
+
+  The browser will render text and most other widgets taking into
+  account the user's device's HD-DPI features.
+
+* In general, less code than Dear ImGUI should be executing if you are not updating
+  1000s of values per frame.
+
+  Consider, Dear ImGUI is mostly stateless AFAIK. That means things like word
+  wrapping a string or computing the size of column might need to be done on
+  every render. In ImHUI's case, that's handled by the browser and if the contents
+  of an element has not changed much of that is cached.
+
 # WARNING!!!
 
 ## **This is an experiment!!**
