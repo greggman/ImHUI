@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "build": "npm run copy && npm run build-tsc",
+    "build": "npm run build-tsc && npm run copy",
     "build-tsc": "tsc --watch",
     "watch": "npm run copy && tsc --watch",
     "copy": "ldcp index.html build && ldcp ImHUI.css build"
