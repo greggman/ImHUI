@@ -5,7 +5,7 @@
 **WAT?** I'm a fan (and a sponsor) of [Dear ImGUI](https://github.com/ocornut/imgui). I've written a couple of articles on it including [this one](https://games.greggman.com/game/imgui-future/) and [this one](https://games.greggman.com/game/rethinking-ui-apis/)
 
 Lately I thought, I wonder what it would be like to try to make an
-HTML library that followed a similar style.
+HTML library that followed a similar style of API.
 
 NOTE: This is not Dear ImGUI running in JavaScript. For that see
 [this repo](https://github.com/flyover/imgui-js). The difference
@@ -21,6 +21,7 @@ This has pluses and minus.
 
 The minus is it's likely not as fast as Dear ImGUI (or other ImGUI)
 libraries, especially if you've got a complex UI that updates at 60fps.
+On the other hand it might actually be faster for certain case.
 
 The pluses are
 
