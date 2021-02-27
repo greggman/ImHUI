@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "build": "npm run build-tsc && npm run copy",
-    "build-ci": "build && npm run copy-src",
+    "build-ci": "npm run build && npm run copy-src",
     "build-tsc": "tsc",
     "watch": "npm run copy && tsc --watch",
     "copy": "ldcp index.html build && ldcp ImHUI.css build",
