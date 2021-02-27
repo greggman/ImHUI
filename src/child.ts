@@ -33,7 +33,7 @@ export function endWrapper() {
 }
 
 export function beginChild(id: string) {
-  beginWrapper('child');
+  beginWrapper('child layout-scrollbar');
 }
 
 export function endChild() {

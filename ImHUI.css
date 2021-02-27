@@ -32,6 +32,15 @@
   }
 }
 
+#root, html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+#root {
+  overflow: auto;
+  padding: 5px;
+}
 html {
   box-sizing: border-box;
   background-color: var(--main-bg-color);
@@ -75,6 +84,15 @@ canvas {
   overflow: auto;
   border: 1px solid var(--outline-color);
   padding: 2px;
+}
+
+.window {
+  position: absolute;
+  box-shadow: 5px 5px 5px black;
+  border: 1px solid black;
+  resize: both;
+  padding: 3px;
+  overflow: auto;
 }
 /* --------------------------- */
 .form-line {

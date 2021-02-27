@@ -29,6 +29,8 @@ class CanvasNode extends Node {
     this.#canvasElem = <HTMLCanvasElement>e('canvas', {className: 'fill-space'});
     this.#ctx =this.#canvasElem.getContext('2d');
     this.elem = this.#canvasElem;
+    const resizeObserver = new ResizeObserver(queueUpdate);
+    resizeObserver.observe(this.elem);
   }
 
   get ctx(): CanvasRenderingContext2D {

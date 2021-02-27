@@ -45,7 +45,6 @@ class ValueDragNode extends Node {
         __classPrivateFieldSet(this, _prompt, prompt);
         this.elem = e('div', { className: 'value-drag' });
         this.elem.addEventListener('mousedown', (e) => {
-            console.log('mousedown');
             __classPrivateFieldSet(this, _mouseStartX, e.clientX);
             __classPrivateFieldSet(this, _startValue, __classPrivateFieldGet(this, _value));
             window.addEventListener('mousemove', __classPrivateFieldGet(this, _onMouseMove));

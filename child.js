@@ -40,7 +40,7 @@ export function endWrapper() {
     context.finish();
 }
 export function beginChild(id) {
-    beginWrapper('child');
+    beginWrapper('child layout-scrollbar');
 }
 export function endChild() {
     endWrapper();

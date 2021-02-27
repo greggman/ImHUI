@@ -13,7 +13,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 };
 var _canvasElem, _ctx;
 import { e } from './utils.js';
-import { context, Node, } from './core.js';
+import { context, Node, queueUpdate, } from './core.js';
 import { text } from './text.js';
 import { beginWrapper, endWrapper } from './child.js';
 function resizeCanvasToDisplaySize(canvas) {
@@ -34,6 +34,8 @@ class CanvasNode extends Node {
         __classPrivateFieldSet(this, _canvasElem, e('canvas', { className: 'fill-space' }));
         __classPrivateFieldSet(this, _ctx, __classPrivateFieldGet(this, _canvasElem).getContext('2d'));
         this.elem = __classPrivateFieldGet(this, _canvasElem);
+        const resizeObserver = new ResizeObserver(queueUpdate);
+        resizeObserver.observe(this.elem);
     }
     get ctx() {
         return __classPrivateFieldGet(this, _ctx);
