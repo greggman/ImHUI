@@ -31,4 +31,14 @@ export function e(tag, attrs = {}, children = []) {
 export function clamp(v, min = 0, max = 1) {
     return Math.min(Math.max(v, min), max);
 }
+export function resizeCanvasToDisplaySize(canvas) {
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    const needResize = width !== canvas.width || height !== canvas.height;
+    if (needResize) {
+        canvas.width = width;
+        canvas.height = height;
+    }
+    return needResize;
+}
 //# sourceMappingURL=utils.js.map

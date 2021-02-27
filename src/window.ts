@@ -178,7 +178,7 @@ export class WindowNode extends Node {
       this.#needSize = false;
       const rect = this.#windowElem.getBoundingClientRect();
       // FIX: hardcoded padding
-      this.#windowElem.style.width = px(rect.width + 6);
+      this.#windowElem.style.width = px(Math.max(400, rect.width + 6));
       this.#windowElem.style.height = px(rect.height + 6);
     }
     Context.setCurrentContext(this.#previousContext);

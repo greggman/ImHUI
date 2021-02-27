@@ -3,8 +3,12 @@
   --main-fg-color: #000;
   --accent-bg-color: #CCC;
   --outline-color: #888;
-  --title-bg-color: #CCC;
   --button-bg-color: #48F;
+  --window-bg-color: #fff;
+  --hover-bg-color: #F00;
+  --focus-bg-color: #FF9;
+
+  --title-bg-color: #CCC;
   --link-color: #36C;
   --code-area-bg-color: #CCC;
   --un-run-bg-color: #8AF;
@@ -20,8 +24,12 @@
     --main-fg-color: #fff;
     --accent-bg-color: #222;
     --outline-color: #888;
-    --title-bg-color: #222;
     --button-bg-color: #05f;
+    --window-bg-color: #444;
+    --hover-bg-color: #F00;
+    --focus-bg-color: #000;
+
+    --title-bg-color: #222;
     --link-color: #6CF;
     --code-area-bg-color: #555;
     --un-run-bg-color: blue;
@@ -54,11 +62,18 @@ button {
   color: var(--main-fg-color);
   border: 1px solid var(--outline-color);
 }
+button:hover {
+  background-color: var(--hover-bg-color);
+}
 input {
   background-color: var(--accent-bg-color);
   color: var(--main-fg-color);
   border: none;
 }
+input:focus {
+  background: var(--focus-bg-color);
+}
+
 *, *:before, *:after {
   box-sizing: inherit;
 }
@@ -93,6 +108,11 @@ canvas {
   resize: both;
   padding: 3px;
   overflow: auto;
+  background-color: var(--window-bg-color);
+  opacity: 0.8;
+}
+.window>details>summary {
+  margin: 3px;
 }
 /* --------------------------- */
 .form-line {
@@ -161,4 +181,7 @@ canvas {
   width: 1em;
   background: var(--button-bg-color);
   cursor: pointer;
+}
+.slider-value>input::-webkit-slider-thumb:hover {
+  background: var(--hover-bg-color);
 }

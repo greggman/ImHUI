@@ -100,7 +100,7 @@ export class WindowNode extends Node {
                 __classPrivateFieldSet(this, _needSize, false);
                 const rect = __classPrivateFieldGet(this, _windowElem).getBoundingClientRect();
                 // FIX: hardcoded padding
-                __classPrivateFieldGet(this, _windowElem).style.width = px(rect.width + 6);
+                __classPrivateFieldGet(this, _windowElem).style.width = px(Math.max(400, rect.width + 6));
                 __classPrivateFieldGet(this, _windowElem).style.height = px(rect.height + 6);
             }
             Context.setCurrentContext(__classPrivateFieldGet(this, _previousContext_1));

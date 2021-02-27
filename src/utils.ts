@@ -28,3 +28,14 @@ export function e(tag: string, attrs = {}, children: (HTMLElement|string)[] = []
 export function clamp(v: number, min: number = 0, max: number = 1): number {
   return Math.min(Math.max(v, min), max);
 }
+
+export function resizeCanvasToDisplaySize(canvas: HTMLCanvasElement): boolean {
+  const width = canvas.clientWidth;
+  const height = canvas.clientHeight;
+  const needResize = width !== canvas.width || height !== canvas.height;
+  if (needResize) {
+    canvas.width = width;
+    canvas.height = height;
+  }
+  return needResize;
+}
