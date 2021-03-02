@@ -1,7 +1,6 @@
 import {e} from './utils.js';
 import {
   context,
-  GetSet,
   Node,
   queueUpdate,
   queueUpdateBecausePreviousUsagesMightBeStale,
@@ -14,9 +13,9 @@ class InputTextNode extends Node {
   #value: string;
   #haveNewValue: boolean = false;
 
-  constructor(getterSetter: GetSet<string>) {
+  constructor(value: string) {
     super();
-    this.#value = getterSetter.get();
+    this.#value = value;
     this.#inputElem = <HTMLInputElement>e('input', {type: 'text', value: this.#value});
     this.elem = this.#inputElem,
     this.#inputElem.addEventListener('input', (e) => {
@@ -26,29 +25,30 @@ class InputTextNode extends Node {
     });
   }
 
-  update(getterSetter: GetSet<string>) {
+  update(value: string): string {
     if (this.#haveNewValue) {
       this.#haveNewValue = false;
-      getterSetter.set(this.#value);
+      value = this.#value;
       queueUpdateBecausePreviousUsagesMightBeStale();
     } else {
-      const value = getterSetter.get();
       if (value !== this.#value) {
         this.#value = value;
         this.#inputElem.value = value;
       }
     }
+    return value;
   }
 }
 
-export function inputTextNode(getterSetter: GetSet<string>) {
-  const node = context.getExistingNodeOrRemove<InputTextNode>(InputTextNode, getterSetter);
-  node.update(getterSetter);
+export function inputTextNode(value: string) {
+  const node = context.getExistingNodeOrRemove<InputTextNode>(InputTextNode, value);
+  return node.update(value);
 }
 
-export function inputText(prompt: string, getterSetter: GetSet<string>) {
+export function inputText(prompt: string, value: string): string {
   beginWrapper('input-text form-line');
-    inputTextNode(getterSetter);
+    value = inputTextNode(value);
     text(prompt);
   endWrapper();
+  return value;
 }

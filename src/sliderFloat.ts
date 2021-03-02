@@ -1,7 +1,6 @@
 import {e} from './utils.js';
 import {
   context,
-  GetSet,
   Node,
   queueUpdate,
   queueUpdateBecausePreviousUsagesMightBeStale,
@@ -16,9 +15,9 @@ class SliderFloatNode extends Node {
   #min: number;
   #max: number;
 
-  constructor(getterSetter: GetSet<number>, min: number, max: number) {
+  constructor(value: number, min: number, max: number) {
     super();
-    this.#value = getterSetter.get();
+    this.#value = value;
     this.#min = min;
     this.#max = max;
     this.#inputElem = <HTMLInputElement>e('input', {
@@ -33,13 +32,12 @@ class SliderFloatNode extends Node {
     });
   }
 
-  update(getterSetter: GetSet<number>, min: number, max: number) {
+  update(value: number, min: number, max: number): number {
     if (this.#haveNewValue) {
       this.#haveNewValue = false;
-      getterSetter.set(this.#value);
+      value = this.#value;
       queueUpdateBecausePreviousUsagesMightBeStale();
     } else {
-      const value = getterSetter.get();
       if (value != this.#value) {
         this.#value = value;
         this.#inputElem.value = value.toString();
@@ -55,20 +53,22 @@ class SliderFloatNode extends Node {
       this.#inputElem.max = max.toString();
       this.#inputElem.step = ((this.#max - this.#min) / 1000).toString();
     }
+    return value;
   }
 }
 
-export function sliderFloatNode(getterSetter: GetSet<number>, min = 0, max = 1) {
-  const node = context.getExistingNodeOrRemove<SliderFloatNode>(SliderFloatNode, getterSetter, min, max);
-  node.update(getterSetter, min, max);
+export function sliderFloatNode(value: number, min = 0, max = 1): number {
+  const node = context.getExistingNodeOrRemove<SliderFloatNode>(SliderFloatNode, value, min, max);
+  return node.update(value, min, max);
 }
 
-export function sliderFloat(prompt: string, getterSetter: GetSet<number>, min = 0, max = 1) {
+export function sliderFloat(prompt: string, value: number, min = 0, max = 1): number {
   beginWrapper('slider-float form-line');
     beginWrapper('slider-value');
-      sliderFloatNode(getterSetter, min, max);
-      text(getterSetter.get().toFixed(2));
+      value = sliderFloatNode(value, min, max);
+      text(value.toFixed(2));
     endWrapper();
     text(prompt);
   endWrapper();
+  return value;
 }

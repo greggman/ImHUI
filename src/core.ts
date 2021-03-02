@@ -74,11 +74,6 @@ export function queueUpdateBecausePreviousUsagesMightBeStale() {
   queueUpdate();
 }
 
-export interface GetSet<T> {
-  get(): T;
-  set(v: T): void;
-}
-
 class RootNode extends Node {
   #context: Context;
 

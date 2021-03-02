@@ -55,12 +55,11 @@ class ColorButtonNode extends Node {
             queueUpdate();
         });
     }
-    update(str, color) {
+    update(str, value) {
         if (__classPrivateFieldGet(this, _prompt) !== str) {
             __classPrivateFieldSet(this, _prompt, str);
             this.elem.textContent = str;
         }
-        const value = color.get();
         if (!isArrayEqual(value, __classPrivateFieldGet(this, _color))) {
             __classPrivateFieldSet(this, _color, value.slice());
             this.elem.style.backgroundColor = rgba(value[0], value[1], value[2], value[3]);
@@ -71,18 +70,18 @@ class ColorButtonNode extends Node {
     }
 }
 _result = new WeakMap(), _prompt = new WeakMap(), _color = new WeakMap();
-export function colorButton(str, color) {
-    const button = context.getExistingNodeOrRemove(ColorButtonNode, str, color);
-    return button.update(str, color);
+export function colorButton(str, value) {
+    const button = context.getExistingNodeOrRemove(ColorButtonNode, str, value);
+    return button.update(str, value);
 }
-export function colorEdit4(prompt, color) {
+export function colorEdit4(prompt, value) {
     beginWrapper('color-edit-4 form-line');
     beginWrapper('color-edit-4-sub');
-    valueDrag('R:', gs(color.get(), '0'));
-    valueDrag('G:', gs(color.get(), '1'));
-    valueDrag('B:', gs(color.get(), '2'));
-    valueDrag('A:', gs(color.get(), '3'));
-    colorButton('', color);
+    value[0] = valueDrag('R:', value[0]);
+    value[1] = valueDrag('G:', value[1]);
+    value[2] = valueDrag('B:', value[2]);
+    value[3] = valueDrag('A:', value[3]);
+    colorButton('', value);
     endWrapper();
     text(prompt);
     endWrapper();

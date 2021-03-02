@@ -1,7 +1,6 @@
 import {e} from './utils.js';
 import {
   context,
-  GetSet,
   Node,
   queueUpdate,
   queueUpdateBecausePreviousUsagesMightBeStale,
@@ -44,7 +43,7 @@ class ColorButtonNode extends Node {
   #prompt: string;
   #color: Color;
 
-  constructor(str: string, color: GetSet<Color>) {
+  constructor(str: string, color: Color) {
     super();
     this.elem = e('div', {className: 'color-button'});
     this.elem.addEventListener('click', () => {
@@ -53,12 +52,11 @@ class ColorButtonNode extends Node {
     });
   }
 
-  update(str: string, color: GetSet<Color>): boolean {
+  update(str: string, value: Color): boolean {
     if (this.#prompt !== str) {
       this.#prompt = str;
       this.elem.textContent = str;
     }
-    const value = color.get();
     if (!isArrayEqual(value, this.#color)) {
       this.#color = value.slice();
       this.elem.style.backgroundColor = rgba(value[0], value[1], value[2], value[3]);
@@ -69,19 +67,19 @@ class ColorButtonNode extends Node {
   }
 }
 
-export function colorButton(str: string, color: GetSet<Color>) : boolean {
-  const button = context.getExistingNodeOrRemove<ColorButtonNode>(ColorButtonNode, str, color);
-  return button.update(str, color);
+export function colorButton(str: string, value: Color) : boolean {
+  const button = context.getExistingNodeOrRemove<ColorButtonNode>(ColorButtonNode, str, value);
+  return button.update(str, value);
 }
 
-export function colorEdit4(prompt: string, color: GetSet<Color>) {
+export function colorEdit4(prompt: string, value: Color) {
   beginWrapper('color-edit-4 form-line')
     beginWrapper('color-edit-4-sub')
-      valueDrag('R:', gs(color.get(), '0'));
-      valueDrag('G:', gs(color.get(), '1'));
-      valueDrag('B:', gs(color.get(), '2'));
-      valueDrag('A:', gs(color.get(), '3'));
-      colorButton('', color);
+      value[0] = valueDrag('R:', value[0]);
+      value[1] = valueDrag('G:', value[1]);
+      value[2] = valueDrag('B:', value[2]);
+      value[3] = valueDrag('A:', value[3]);
+      colorButton('', value);
     endWrapper();
     text(prompt);
   endWrapper();

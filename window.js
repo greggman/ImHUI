@@ -15,7 +15,7 @@ var _context, _previousContext, _detailsElem, _value, _haveNewValue, _context_1,
 import { e } from './utils.js';
 import { Node, Context, context, queueUpdate } from './core.js';
 export class WrapperNode extends Node {
-    constructor(type, className, getterSetter) {
+    constructor(type, className, value) {
         super();
         _context.set(this, void 0);
         _previousContext.set(this, void 0);
@@ -28,25 +28,23 @@ export class WrapperNode extends Node {
         __classPrivateFieldSet(this, _detailsElem, e(type, { open: true, className }));
         this.elem = __classPrivateFieldGet(this, _detailsElem);
         __classPrivateFieldSet(this, _context, new Context(this.elem, this.end));
-        __classPrivateFieldSet(this, _value, getterSetter.get());
+        __classPrivateFieldSet(this, _value, value);
         __classPrivateFieldGet(this, _detailsElem).addEventListener('click', (e) => {
             __classPrivateFieldSet(this, _value, __classPrivateFieldGet(this, _detailsElem).open);
             __classPrivateFieldSet(this, _haveNewValue, true);
             queueUpdate();
         });
     }
-    update(getterSetter) {
+    update(value) {
         if (__classPrivateFieldGet(this, _haveNewValue)) {
-            getterSetter.set(__classPrivateFieldGet(this, _value));
-            return __classPrivateFieldGet(this, _value);
+            value = __classPrivateFieldGet(this, _value);
         }
         else {
-            const value = getterSetter.get();
             if (__classPrivateFieldGet(this, _value) !== value) {
                 __classPrivateFieldGet(this, _detailsElem).open = !!__classPrivateFieldGet(this, _value);
             }
-            return value;
         }
+        return value;
     }
     begin() {
         __classPrivateFieldSet(this, _previousContext, context);
@@ -84,7 +82,7 @@ function addMoveHandlers(elem) {
 //  
 //
 export class WindowNode extends Node {
-    constructor(title, getterSetter) {
+    constructor(title, value) {
         super();
         _context_1.set(this, void 0);
         _previousContext_1.set(this, void 0);
@@ -148,7 +146,7 @@ export class WindowNode extends Node {
         // FIX: this is a place holder because Node requires one
         this.elem = e('div');
         __classPrivateFieldSet(this, _context_1, new Context(__classPrivateFieldGet(this, _detailsElem_1), this.end));
-        __classPrivateFieldSet(this, _value_1, getterSetter.get());
+        __classPrivateFieldSet(this, _value_1, value);
         __classPrivateFieldGet(this, _detailsElem_1).addEventListener('click', (e) => {
             if (e.clientX > 20) {
                 e.preventDefault();
@@ -158,22 +156,20 @@ export class WindowNode extends Node {
             queueUpdate();
         });
     }
-    update(title, getterSetter) {
+    update(title, value) {
         if (__classPrivateFieldGet(this, _title) !== title) {
             __classPrivateFieldSet(this, _title, title);
             __classPrivateFieldGet(this, _summaryElem).textContent = title;
         }
         if (__classPrivateFieldGet(this, _haveNewValue_1)) {
-            getterSetter.set(__classPrivateFieldGet(this, _value_1));
-            return __classPrivateFieldGet(this, _value_1);
+            value = __classPrivateFieldGet(this, _value_1);
         }
         else {
-            const value = getterSetter.get();
             if (__classPrivateFieldGet(this, _value_1) !== value) {
                 __classPrivateFieldGet(this, _detailsElem_1).open = !!__classPrivateFieldGet(this, _value_1);
             }
-            return value;
         }
+        return value;
     }
     begin() {
         __classPrivateFieldSet(this, _previousContext_1, context);
@@ -182,10 +178,9 @@ export class WindowNode extends Node {
     }
 }
 _context_1 = new WeakMap(), _previousContext_1 = new WeakMap(), _windowElem = new WeakMap(), _detailsElem_1 = new WeakMap(), _summaryElem = new WeakMap(), _value_1 = new WeakMap(), _haveNewValue_1 = new WeakMap(), _title = new WeakMap(), _needSize = new WeakMap();
-export function begin(title, getterSetter, flags) {
-    const node = context.getExistingNodeOrRemove(WindowNode, title, getterSetter);
-    node.update(title, getterSetter);
-    const active = getterSetter.get();
+export function begin(title, active, flags) {
+    const node = context.getExistingNodeOrRemove(WindowNode, title, active);
+    node.update(title, active);
     node.begin();
     return active;
 }

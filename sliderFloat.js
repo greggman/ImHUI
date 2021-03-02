@@ -17,14 +17,14 @@ import { context, Node, queueUpdate, queueUpdateBecausePreviousUsagesMightBeStal
 import { text } from './text.js';
 import { beginWrapper, endWrapper } from './child.js';
 class SliderFloatNode extends Node {
-    constructor(getterSetter, min, max) {
+    constructor(value, min, max) {
         super();
         _inputElem.set(this, void 0);
         _value.set(this, void 0);
         _haveNewValue.set(this, false);
         _min.set(this, void 0);
         _max.set(this, void 0);
-        __classPrivateFieldSet(this, _value, getterSetter.get());
+        __classPrivateFieldSet(this, _value, value);
         __classPrivateFieldSet(this, _min, min);
         __classPrivateFieldSet(this, _max, max);
         __classPrivateFieldSet(this, _inputElem, e('input', {
@@ -38,14 +38,13 @@ class SliderFloatNode extends Node {
             queueUpdate();
         });
     }
-    update(getterSetter, min, max) {
+    update(value, min, max) {
         if (__classPrivateFieldGet(this, _haveNewValue)) {
             __classPrivateFieldSet(this, _haveNewValue, false);
-            getterSetter.set(__classPrivateFieldGet(this, _value));
+            value = __classPrivateFieldGet(this, _value);
             queueUpdateBecausePreviousUsagesMightBeStale();
         }
         else {
-            const value = getterSetter.get();
             if (value != __classPrivateFieldGet(this, _value)) {
                 __classPrivateFieldSet(this, _value, value);
                 __classPrivateFieldGet(this, _inputElem).value = value.toString();
@@ -61,20 +60,22 @@ class SliderFloatNode extends Node {
             __classPrivateFieldGet(this, _inputElem).max = max.toString();
             __classPrivateFieldGet(this, _inputElem).step = ((__classPrivateFieldGet(this, _max) - __classPrivateFieldGet(this, _min)) / 1000).toString();
         }
+        return value;
     }
 }
 _inputElem = new WeakMap(), _value = new WeakMap(), _haveNewValue = new WeakMap(), _min = new WeakMap(), _max = new WeakMap();
-export function sliderFloatNode(getterSetter, min = 0, max = 1) {
-    const node = context.getExistingNodeOrRemove(SliderFloatNode, getterSetter, min, max);
-    node.update(getterSetter, min, max);
+export function sliderFloatNode(value, min = 0, max = 1) {
+    const node = context.getExistingNodeOrRemove(SliderFloatNode, value, min, max);
+    return node.update(value, min, max);
 }
-export function sliderFloat(prompt, getterSetter, min = 0, max = 1) {
+export function sliderFloat(prompt, value, min = 0, max = 1) {
     beginWrapper('slider-float form-line');
     beginWrapper('slider-value');
-    sliderFloatNode(getterSetter, min, max);
-    text(getterSetter.get().toFixed(2));
+    value = sliderFloatNode(value, min, max);
+    text(value.toFixed(2));
     endWrapper();
     text(prompt);
     endWrapper();
+    return value;
 }
 //# sourceMappingURL=sliderFloat.js.map

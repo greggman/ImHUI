@@ -15,7 +15,7 @@ var _prompt, _startValue, _value, _min, _max, _precision, _haveNewValue, _mouseS
 import { clamp, e, } from './utils.js';
 import { context, Node, queueUpdate, queueUpdateBecausePreviousUsagesMightBeStale, } from './core.js';
 class ValueDragNode extends Node {
-    constructor(prompt, getterSetter, min = 0, max = 1, precision = 2) {
+    constructor(prompt, value, min = 0, max = 1, precision = 2) {
         super();
         _prompt.set(this, void 0);
         _startValue.set(this, void 0);
@@ -54,14 +54,13 @@ class ValueDragNode extends Node {
     _update() {
         this.elem.textContent = `${__classPrivateFieldGet(this, _prompt)}${__classPrivateFieldGet(this, _value).toFixed(__classPrivateFieldGet(this, _precision))}`;
     }
-    update(prompt, getterSetter, min = 0, max = 1, precision = 2) {
+    update(prompt, value, min = 0, max = 1, precision = 2) {
         if (__classPrivateFieldGet(this, _haveNewValue)) {
             __classPrivateFieldSet(this, _haveNewValue, false);
-            getterSetter.set(__classPrivateFieldGet(this, _value));
+            value = __classPrivateFieldGet(this, _value);
             queueUpdateBecausePreviousUsagesMightBeStale();
         }
         else {
-            const value = getterSetter.get();
             if (value !== __classPrivateFieldGet(this, _value) ||
                 prompt !== __classPrivateFieldGet(this, _prompt) ||
                 min !== __classPrivateFieldGet(this, _min) ||
@@ -75,11 +74,12 @@ class ValueDragNode extends Node {
                 this._update();
             }
         }
+        return value;
     }
 }
 _prompt = new WeakMap(), _startValue = new WeakMap(), _value = new WeakMap(), _min = new WeakMap(), _max = new WeakMap(), _precision = new WeakMap(), _haveNewValue = new WeakMap(), _mouseStartX = new WeakMap(), _moveRange = new WeakMap(), _onMouseMove = new WeakMap(), _onMouseUp = new WeakMap();
-export function valueDrag(prompt, getterSetter, min = 0, max = 1, precision = 2) {
-    const node = context.getExistingNodeOrRemove(ValueDragNode, getterSetter, min, max);
-    node.update(prompt, getterSetter, min, max);
+export function valueDrag(prompt, value, min = 0, max = 1, precision = 2) {
+    const node = context.getExistingNodeOrRemove(ValueDragNode, value, min, max);
+    return node.update(prompt, value, min, max);
 }
 //# sourceMappingURL=valueDrag.js.map

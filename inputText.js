@@ -17,12 +17,12 @@ import { context, Node, queueUpdate, queueUpdateBecausePreviousUsagesMightBeStal
 import { text } from './text.js';
 import { beginWrapper, endWrapper } from './child.js';
 class InputTextNode extends Node {
-    constructor(getterSetter) {
+    constructor(value) {
         super();
         _inputElem.set(this, void 0);
         _value.set(this, void 0);
         _haveNewValue.set(this, false);
-        __classPrivateFieldSet(this, _value, getterSetter.get());
+        __classPrivateFieldSet(this, _value, value);
         __classPrivateFieldSet(this, _inputElem, e('input', { type: 'text', value: __classPrivateFieldGet(this, _value) }));
         this.elem = __classPrivateFieldGet(this, _inputElem),
             __classPrivateFieldGet(this, _inputElem).addEventListener('input', (e) => {
@@ -31,30 +31,31 @@ class InputTextNode extends Node {
                 queueUpdate();
             });
     }
-    update(getterSetter) {
+    update(value) {
         if (__classPrivateFieldGet(this, _haveNewValue)) {
             __classPrivateFieldSet(this, _haveNewValue, false);
-            getterSetter.set(__classPrivateFieldGet(this, _value));
+            value = __classPrivateFieldGet(this, _value);
             queueUpdateBecausePreviousUsagesMightBeStale();
         }
         else {
-            const value = getterSetter.get();
             if (value !== __classPrivateFieldGet(this, _value)) {
                 __classPrivateFieldSet(this, _value, value);
                 __classPrivateFieldGet(this, _inputElem).value = value;
             }
         }
+        return value;
     }
 }
 _inputElem = new WeakMap(), _value = new WeakMap(), _haveNewValue = new WeakMap();
-export function inputTextNode(getterSetter) {
-    const node = context.getExistingNodeOrRemove(InputTextNode, getterSetter);
-    node.update(getterSetter);
+export function inputTextNode(value) {
+    const node = context.getExistingNodeOrRemove(InputTextNode, value);
+    return node.update(value);
 }
-export function inputText(prompt, getterSetter) {
+export function inputText(prompt, value) {
     beginWrapper('input-text form-line');
-    inputTextNode(getterSetter);
+    value = inputTextNode(value);
     text(prompt);
     endWrapper();
+    return value;
 }
 //# sourceMappingURL=inputText.js.map

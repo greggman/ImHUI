@@ -14,41 +14,30 @@ const data = {
   my_random: new Array(120).fill(0),
 };
 
-function gs(obj: any, prop: string) {
-  return {
-    get() { return obj[prop]; },
-    set(v: any) { obj[prop] = v; }
-  };
-}
-
-function g(prop: string) {
-  return gs(data, prop);
-}
-
 function renderUI() {
   ImHUI.start();
 
-  ImHUI.begin("Test Window", g('my_first_active'), 'MenuBar');
+  data.my_first_tool = ImHUI.begin("Test Window", data.my_first_tool, 'MenuBar');
     ImHUI.text(`Hello, world 🌐 ${123}`);
     if (ImHUI.button("Save")) {
       console.log('save');
     }
-    ImHUI.inputText("string", g('str'));
-    ImHUI.sliderFloat("float", g('v'), 0, 5);
-    ImHUI.inputText("string", g('str'));
-    ImHUI.sliderFloat("float", g('v'), 0, 15);
+    data.str = ImHUI.inputText("string", data.str);
+    data.v = ImHUI.sliderFloat("float", data.v, 0, 5);
+    data.str = ImHUI.inputText("string", data.str);
+    data.v = ImHUI.sliderFloat("float", data.v, 0, 15);
 
     ImHUI.text(`The string is: ${data.str}`);
     ImHUI.text(`The float is: float ${data.v}`);
 
-    ImHUI.colorEdit4("Background Color", gs(settings, 'clearColor'));
-    ImHUI.sliderFloat("Vertex Count", gs(settings, 'vertexCount'), 0, 100000);
+    ImHUI.colorEdit4("Background Color", settings.clearColor);
+    settings.vertexCount = ImHUI.sliderFloat("Vertex Count", settings.vertexCount, 0, 100000);
 
   ImHUI.end();
 
   // ---
 
-  ImHUI.begin("My First Tool", g('my_tool_active'), 'MenuBar');
+  data.my_tool_active = ImHUI.begin("My First Tool", data.my_tool_active, 'MenuBar');
   if (ImHUI.beginMenuBar())
   {
       if (ImHUI.beginMenu("File"))
@@ -62,7 +51,7 @@ function renderUI() {
   }
 
   // Edit a color (stored as ~4 floats)
-  ImHUI.colorEdit4("Color", g('my_color'));
+  ImHUI.colorEdit4("Color", data.my_color);
 
   ImHUI.text(`fps: ${data.fps.toFixed(1)}`);
 

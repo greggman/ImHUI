@@ -1,5 +1,5 @@
 import {e} from './utils.js';
-import {Node, Context, context, GetSet, queueUpdate} from './core.js';
+import {Node, Context, context, queueUpdate} from './core.js';
 import {typeText} from './text.js';
 
 export class WrapperNode extends Node {
@@ -9,12 +9,12 @@ export class WrapperNode extends Node {
   #value: boolean;
   #haveNewValue: boolean;
 
-  constructor(type: string, className: string, getterSetter: GetSet<boolean>) {
+  constructor(type: string, className: string, value: boolean) {
     super();
     this.#detailsElem = <HTMLDetailsElement>e(type, {open: true, className});
     this.elem = this.#detailsElem;
     this.#context = new Context(this.elem, this.end);
-    this.#value = getterSetter.get();
+    this.#value = value;
     this.#detailsElem.addEventListener('click', (e) => {
       this.#value = this.#detailsElem.open;
       this.#haveNewValue = true;
@@ -22,17 +22,15 @@ export class WrapperNode extends Node {
     });
   }
 
-  update(getterSetter: GetSet<boolean>): boolean {
+  update(value: boolean): boolean {
     if (this.#haveNewValue) {
-      getterSetter.set(this.#value);
-      return this.#value;
+      value = this.#value;
     } else {
-      const value = getterSetter.get();
       if (this.#value !== value) {
         this.#detailsElem.open = !!this.#value;
       }
-      return value;
     }
+    return value;
   }
 
   begin() {
@@ -88,7 +86,7 @@ export class WindowNode extends Node {
   #title: string;
   #needSize: boolean = true;
 
-  constructor(title: string, getterSetter: GetSet<boolean>) {
+  constructor(title: string, value: boolean) {
     super();
     this.#summaryElem = e('summary', {textContent: title});
     this.#detailsElem = <HTMLDetailsElement>e('details', {open: true}, [
@@ -139,7 +137,7 @@ export class WindowNode extends Node {
     // FIX: this is a place holder because Node requires one
     this.elem = e('div'); 
     this.#context = new Context(this.#detailsElem, this.end);
-    this.#value = getterSetter.get();
+    this.#value = value;
     this.#detailsElem.addEventListener('click', (e) => {
       if (e.clientX > 20) {
         e.preventDefault();
@@ -150,21 +148,19 @@ export class WindowNode extends Node {
     });
   }
 
-  update(title: string, getterSetter: GetSet<boolean>): boolean {
+  update(title: string, value: boolean): boolean {
     if (this.#title !== title) {
       this.#title = title;
       this.#summaryElem.textContent = title;
     }
     if (this.#haveNewValue) {
-      getterSetter.set(this.#value);
-      return this.#value;
+      value = this.#value;
     } else {
-      const value = getterSetter.get();
       if (this.#value !== value) {
         this.#detailsElem.open = !!this.#value;
       }
-      return value;
     }
+    return value;
   }
 
   begin() {
@@ -187,11 +183,10 @@ export class WindowNode extends Node {
 
 export function begin(
     title: string,
-    getterSetter: GetSet<boolean>,
-    flags: any) {
-  const node = context.getExistingNodeOrRemove<WindowNode>(WindowNode, title, getterSetter);
-  node.update(title, getterSetter);
-  const active = getterSetter.get();
+    active: boolean,
+    flags: any): boolean {
+  const node = context.getExistingNodeOrRemove<WindowNode>(WindowNode, title, active);
+  node.update(title, active);
   node.begin();
   return active;
 }

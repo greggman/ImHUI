@@ -4,7 +4,6 @@ import {
 } from './utils.js';
 import {
   context,
-  GetSet,
   Node,
   queueUpdate,
   queueUpdateBecausePreviousUsagesMightBeStale,
