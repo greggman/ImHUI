@@ -4,7 +4,6 @@ import {
 } from './utils.js';
 import {
   context,
-  GetSet,
   Node,
   queueUpdate,
   queueUpdateBecausePreviousUsagesMightBeStale,
@@ -21,7 +20,7 @@ class ValueDragNode extends Node {
   #mouseStartX: number;
   #moveRange: number = 100;
 
-  constructor(prompt: string, getterSetter: GetSet<number>, min: number = 0, max:number = 1, precision: number = 2) {
+  constructor(prompt: string, value: number, min: number = 0, max:number = 1, precision: number = 2) {
     super();
     this.#min = min;
     this.#max = max;
@@ -55,13 +54,12 @@ class ValueDragNode extends Node {
     this.elem.textContent = `${this.#prompt}${this.#value.toFixed(this.#precision)}`
   }
 
-  update(prompt: string, getterSetter: GetSet<number>, min: number = 0, max: number = 1, precision: number = 2) {
+  update(prompt: string, value: number, min: number = 0, max: number = 1, precision: number = 2): number {
     if (this.#haveNewValue) {
       this.#haveNewValue = false;
-      getterSetter.set(this.#value);
+      value = this.#value;
       queueUpdateBecausePreviousUsagesMightBeStale();
     } else {
-      const value = getterSetter.get();
       if (value !== this.#value ||
           prompt !== this.#prompt ||
           min !== this.#min ||
@@ -75,11 +73,12 @@ class ValueDragNode extends Node {
         this._update();
       }
     }
+    return value;
   }
 }
 
-export function valueDrag(prompt: string, getterSetter: GetSet<number>, min = 0, max = 1, precision: number = 2) {
-  const node = context.getExistingNodeOrRemove<ValueDragNode>(ValueDragNode, getterSetter, min, max);
-  node.update(prompt, getterSetter, min, max);
+export function valueDrag(prompt: string, value: number, min = 0, max = 1, precision: number = 2): number {
+  const node = context.getExistingNodeOrRemove<ValueDragNode>(ValueDragNode, value, min, max);
+  return node.update(prompt, value, min, max);
 }
 
