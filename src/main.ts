@@ -38,33 +38,34 @@ function renderUI() {
   // ---
 
   data.my_tool_active = ImHUI.begin("My First Tool", data.my_tool_active, 'MenuBar');
-  if (ImHUI.beginMenuBar())
-  {
-      if (ImHUI.beginMenu("File"))
-      {
-          if (ImHUI.menuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
-          if (ImHUI.menuItem("Save", "Ctrl+S"))   { /* Do stuff */ }
-          if (ImHUI.menuItem("Close", "Ctrl+W"))  { data.my_tool_active = false; }
-          ImHUI.endMenu();
-      }
-      ImHUI.endMenuBar();
-  }
+    if (ImHUI.beginMenuBar())
+    {
+        if (ImHUI.beginMenu("File"))
+        {
+            if (ImHUI.menuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
+            if (ImHUI.menuItem("Save", "Ctrl+S"))   { /* Do stuff */ }
+            if (ImHUI.menuItem("Close", "Ctrl+W"))  { data.my_tool_active = false; }
+            ImHUI.endMenu();
+        }
+        ImHUI.endMenuBar();
+    }
 
-  // Edit a color (stored as ~4 floats)
-  ImHUI.colorEdit4("Color", data.my_color);
+    // Edit a color (stored as ~4 floats)
+    ImHUI.colorEdit4("Color", data.my_color);
 
-  ImHUI.text(`fps: ${data.fps.toFixed(1)}`);
+    ImHUI.text(`fps: ${data.fps.toFixed(1)}`);
 
-  // Plot some values
-  ImHUI.plotLines("Frame Times", data.my_values, 0, 1000 / 30);
-  ImHUI.plotLines("Sine Wave", data.my_random, -1.1, 1.1);
+    // Plot some values
+    ImHUI.plotLines("Frame Times", data.my_values, 0, 1000 / 30);
+    ImHUI.plotLines("Sine Wave", data.my_random, -1.1, 1.1);
 
-  // Display contents in a scrolling region
-  ImHUI.textColored('yellow', "Important Stuff");
-  ImHUI.beginChild("Scrolling");
-  for (let n = 0; n < 50; n++)
-      ImHUI.text(`${n.toString().padStart(4, '0')}: Some text`);
-  ImHUI.endChild();
+    // Display contents in a scrolling region
+    ImHUI.textColored('yellow', "Important Stuff");
+    ImHUI.beginChild("Scrolling");
+    for (let n = 0; n < 50; n++)
+        ImHUI.text(`${n.toString().padStart(4, '0')}: Some text`);
+    ImHUI.endChild();
+
   ImHUI.end();
 
 

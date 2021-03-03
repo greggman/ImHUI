@@ -107,3 +107,40 @@ export function finish() {
   context.finish();
 }
 
+function copyChanges(src: any, shadow: any, dst: any) {
+  for (const [k, v] of Object.entries(src)) {
+    if (k !== 'style') {
+      if (shadow[k] !== v) {
+        shadow[k] = v;
+        dst[k] = v;
+      }
+    }
+  }
+}
+
+class ElementNode extends Node {
+  #text: string;
+  #attrs: Record<string, any>;
+  #style: Record<string, any>;
+
+  constructor(type: string) {
+    super();
+    this.elem = e(type);
+    this.#attrs = {};
+    this.#style = {};
+  }
+  update(attrs?: Record<string, any>) {
+    if (attrs) {
+      copyChanges(attrs, this.#attrs, this.elem);
+      const {style} = attrs;
+      if (style) {
+        copyChanges(style, this.#style, this.elem.style);
+      }
+    }
+  }
+}
+
+export function element(type: string, attrs?: Record<string, any>) {
+  const node = context.getExistingNodeOrRemove<ElementNode>(ElementNode, type);
+  node.update(attrs);
+}
