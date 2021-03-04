@@ -15,16 +15,10 @@ class SliderFloatNode extends Node {
   #min: number;
   #max: number;
 
-  constructor(value: number, min: number, max: number) {
-    super();
-    this.#value = value;
-    this.#min = min;
-    this.#max = max;
-    this.#inputElem = <HTMLInputElement>e('input', {
-      type: 'range', min, max, step: (max - min) / 1000,
-    });
-    this.elem = this.#inputElem;
-    this.#inputElem.value = this.#value.toString();
+  constructor() {
+    super('input');
+    this.#inputElem = <HTMLInputElement>this.elem;
+    this.#inputElem.type = 'range';
     this.#inputElem.addEventListener('input', (e) => {
       this.#value = parseFloat(this.#inputElem.value);
       this.#haveNewValue = true;
@@ -38,7 +32,7 @@ class SliderFloatNode extends Node {
       value = this.#value;
       queueUpdateBecausePreviousUsagesMightBeStale();
     } else {
-      if (value != this.#value) {
+      if (value !== this.#value) {
         this.#value = value;
         this.#inputElem.value = value.toString();
       }
@@ -58,7 +52,7 @@ class SliderFloatNode extends Node {
 }
 
 export function sliderFloatNode(value: number, min = 0, max = 1): number {
-  const node = context.getExistingNodeOrRemove<SliderFloatNode>(SliderFloatNode, value, min, max);
+  const node = context.getExistingNodeOrRemove<SliderFloatNode>(SliderFloatNode);
   return node.update(value, min, max);
 }
 

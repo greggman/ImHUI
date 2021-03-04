@@ -6,8 +6,7 @@ class ButtonNode extends Node {
   #prompt: string;
 
   constructor(str: string) {
-    super();
-    this.elem = e('button');
+    super('button');
     this.elem.addEventListener('click', () => {
       this.#result = true;
       queueUpdate();

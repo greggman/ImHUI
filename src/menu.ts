@@ -15,7 +15,7 @@ export function endMenu() {
 }
 
 export function menuItem(title: string, shortcut: string): boolean {
-  return true;
+  return false;
 }
 
 

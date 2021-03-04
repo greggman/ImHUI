@@ -5,8 +5,7 @@ class TextNode extends Node {
   #text: string;
 
   constructor(str: string) {
-    super();
-    this.elem = e('div');
+    super('div');
   }
   update(str: string) {
     if (this.#text !== str) {
@@ -18,21 +17,19 @@ class TextNode extends Node {
 
 class ClassTextNode extends Node {
   #text: string;
-  #className: string
 
-  constructor(type: string, className: string) {
-    super();
-    this.elem = e(type, {className});
+  constructor(type: string) {
+    // FIX! You can't pass the type OR we need to fix the code
+    // that gets an old node because it checks by JS class instanceof
+    // not by element type
+    super(type);
   }
   update(className: string, str: string) {
     if (this.#text !== str) {
       this.#text = str;
       this.elem.textContent = str;
     }
-    if (this.#className !== className) {
-      this.#className = className;
-      this.elem.className = className;
-    }
+    this.setClassName(className);
   }
 }
 
@@ -40,8 +37,10 @@ class TypeTextNode extends Node {
   #text: string;
 
   constructor(type: string) {
-    super();
-    this.elem = e(type);
+    // FIX! You can't pass the type OR we need to fix the code
+    // that gets an old node because it checks by JS class instanceof
+    // not by element type
+    super(type);
   }
   update(str: string) {
     if (this.#text !== str) {
@@ -56,8 +55,7 @@ class ColorTextNode extends Node {
   #color: string
 
   constructor(color: string, str: string) {
-    super();
-    this.elem = e('div', {style: {color: color}});
+    super('div');
   }
   update(color: string, str: string) {
     if (this.#text !== str) {

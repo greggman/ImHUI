@@ -21,12 +21,8 @@ class ValueDragNode extends Node {
   #moveRange: number = 100;
 
   constructor(prompt: string, value: number, min: number = 0, max:number = 1, precision: number = 2) {
-    super();
-    this.#min = min;
-    this.#max = max;
-    this.#precision = precision;
-    this.#prompt = prompt;
-    this.elem = e('div', {className: 'value-drag'});
+    super('div');
+    this.setClassName('value-drag');
     this.elem.addEventListener('mousedown', (e: MouseEvent) => {
       this.#mouseStartX = e.clientX;
       this.#startValue = this.#value;

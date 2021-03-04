@@ -44,8 +44,8 @@ class ColorButtonNode extends Node {
   #color: Color;
 
   constructor(str: string, color: Color) {
-    super();
-    this.elem = e('div', {className: 'color-button'});
+    super('div');
+    this.setClassName('color-button');
     this.elem.addEventListener('click', () => {
       this.#result = true;
       queueUpdate();

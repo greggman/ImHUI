@@ -9,6 +9,6 @@ export function beginMenu(title) {
 export function endMenu() {
 }
 export function menuItem(title, shortcut) {
-    return true;
+    return false;
 }
 //# sourceMappingURL=menu.js.map

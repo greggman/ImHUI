@@ -1,66 +1,103 @@
-var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, privateMap, value) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to set private field on non-instance");
-    }
-    privateMap.set(receiver, value);
-    return value;
-};
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, privateMap) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to get private field on non-instance");
-    }
-    return privateMap.get(receiver);
-};
-var _currentElem, _currentParent, _currentChildrenByKey, _currentUsedKeys, _children, _currentKey, _finishFn, _context;
 export class Node {
+    constructor(type) {
+        if (typeof type === 'string') {
+            this.elem = document.createElement(type);
+        }
+        else {
+            this.elem = type;
+        }
+    }
+    #className;
     getAs(ctor) {
         return this instanceof ctor ? (this) : undefined;
+    }
+    setClassName(className) {
+        if (this.#className !== className) {
+            this.#className = className;
+            this.elem.className = className;
+        }
+    }
+    setParent(parent) {
+        if (parent) {
+            parent.appendChild(this.elem);
+        }
+        else {
+            this.remove();
+        }
+    }
+    remove() {
+        this.elem.remove();
     }
 }
 ;
 const stack = [];
 const noop = () => { };
+const contextStack = [];
 export class Context {
     constructor(elem, finishFn = noop) {
-        _currentElem.set(this, void 0);
-        _currentParent.set(this, void 0);
-        _currentChildrenByKey.set(this, new Map());
-        _currentUsedKeys.set(this, new Set());
-        _children.set(this, []);
-        _currentKey.set(this, 0);
-        _finishFn.set(this, void 0);
-        __classPrivateFieldSet(this, _currentElem, elem);
-        __classPrivateFieldSet(this, _finishFn, finishFn);
+        this.#currentChildrenByKey = new Map();
+        this.#currentUsedKeys = new Set();
+        this.#children = [];
+        this.#currentKey = 0;
+        this.#currentElem = elem;
+        this.#finishFn = finishFn;
     }
+    #currentElem;
+    #currentParent;
+    #currentChildrenByKey;
+    #currentUsedKeys;
+    #children;
+    #currentKey;
+    #finishFn;
     getExistingNodeOrRemove(ctor, ...args) {
-        var _a;
-        const key = (__classPrivateFieldSet(this, _currentKey, (_a = +__classPrivateFieldGet(this, _currentKey)) + 1), _a).toString();
-        let node = __classPrivateFieldGet(this, _currentChildrenByKey).get(key);
+        const key = (this.#currentKey++).toString();
+        let node = this.#currentChildrenByKey.get(key);
         let typedNode = node?.getAs(ctor);
         if (!typedNode) {
             if (node) {
-                node.elem.remove();
+                node.remove();
             }
             typedNode = new ctor(...args);
-            __classPrivateFieldGet(this, _currentElem).appendChild(typedNode.elem);
-            __classPrivateFieldGet(this, _currentChildrenByKey).set(key, typedNode);
+            typedNode.setParent(this.#currentElem);
+            this.#currentChildrenByKey.set(key, typedNode);
         }
-        __classPrivateFieldGet(this, _currentUsedKeys).add(key);
+        this.#currentUsedKeys.add(key);
         return typedNode;
     }
     start() {
-        __classPrivateFieldSet(this, _currentKey, 0);
+        this.#currentKey = 0;
     }
     finish() {
-        // TODO: remove unused
-        const unused = new Set();
-        __classPrivateFieldGet(this, _finishFn).call(this);
+        for (const [key, node] of this.#currentChildrenByKey.entries()) {
+            if (this.#currentUsedKeys.has(key)) {
+                // clear for next pass
+                this.#currentUsedKeys.delete(key);
+            }
+            else {
+                node.remove();
+                this.#currentChildrenByKey.delete(key);
+            }
+        }
+        this.#finishFn();
     }
-    static setCurrentContext(newContext) {
+    /*
+    static setCurrentContext(newContext: Context) {
+      context = newContext;
+    }
+  
+    static getCurrentContext(): Context {
+      return context;
+    }
+    */
+    static pushContext(newContext) {
+        contextStack.push(context);
         context = newContext;
+        context.start();
+    }
+    static popContext() {
+        context = contextStack.pop();
     }
 }
-_currentElem = new WeakMap(), _currentParent = new WeakMap(), _currentChildrenByKey = new WeakMap(), _currentUsedKeys = new WeakMap(), _children = new WeakMap(), _currentKey = new WeakMap(), _finishFn = new WeakMap();
 export let context;
 let currentRenderUIFunc;
 let updateId;
@@ -78,29 +115,73 @@ export function queueUpdateBecausePreviousUsagesMightBeStale() {
 }
 class RootNode extends Node {
     constructor(elem) {
-        super();
-        _context.set(this, void 0);
-        __classPrivateFieldSet(this, _context, new Context(elem));
+        super(elem);
+        this.#context = new Context(elem);
     }
+    #context;
     // FIX!
     setAsCurrent() {
-        context = __classPrivateFieldGet(this, _context);
+        context = this.#context;
+    }
+    // FIX!
+    isCurrent() {
+        return context === this.#context;
     }
 }
-_context = new WeakMap();
+let root;
 export function setup(elem, renderUIFunc) {
     currentRenderUIFunc = renderUIFunc;
-    const node = new RootNode(elem);
-    // FIX!
-    node.setAsCurrent();
+    root = new RootNode(elem);
     queueUpdate();
     const resizeObserver = new ResizeObserver(queueUpdate);
     resizeObserver.observe(elem);
 }
 export function start() {
+    // FIX!
+    if (context) {
+        throw new Error('context should not be set on start');
+    }
+    root.setAsCurrent();
     context.start();
 }
 export function finish() {
     context.finish();
+    if (!root.isCurrent()) {
+        throw new Error('not root context at finish. Are you missing an ImMUI.end or endWrapper, etc...?');
+    }
+    context = null;
+}
+function copyChanges(src, shadow, dst) {
+    for (const [k, v] of Object.entries(src)) {
+        if (k !== 'style') {
+            if (shadow[k] !== v) {
+                shadow[k] = v;
+                dst[k] = v;
+            }
+        }
+    }
+}
+class ElementNode extends Node {
+    constructor(type) {
+        super(type);
+        this.#attrs = {};
+        this.#style = {};
+    }
+    #text;
+    #attrs;
+    #style;
+    update(attrs) {
+        if (attrs) {
+            copyChanges(attrs, this.#attrs, this.elem);
+            const { style } = attrs;
+            if (style) {
+                copyChanges(style, this.#style, this.elem.style);
+            }
+        }
+    }
+}
+export function element(type, attrs) {
+    const node = context.getExistingNodeOrRemove(ElementNode, type);
+    node.update(attrs);
 }
 //# sourceMappingURL=core.js.map
