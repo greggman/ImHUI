@@ -31,16 +31,13 @@ export class Node {
   }
 };
 
-const stack: Node[] = [];
 const noop = () => {};
 const contextStack: Context[] = [];
 
 export class Context {
   #currentElem: HTMLElement;
-  #currentParent: Node;
   #currentChildrenByKey: Map<string, Node> = new Map();
   #currentUsedKeys: Set<string> = new Set();
-  #children: Node[] = [];
   #currentKey: number = 0;
   #finishFn: () => void;
 
@@ -82,16 +79,6 @@ export class Context {
     
     this.#finishFn();
   }
-
-  /*
-  static setCurrentContext(newContext: Context) {
-    context = newContext;
-  }
-
-  static getCurrentContext(): Context {
-    return context;
-  }
-  */
 
   static pushContext(newContext: Context) {
     contextStack.push(context);
