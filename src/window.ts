@@ -101,13 +101,12 @@ export type WindowSettings = {
 
 export class WindowNode extends Node {
   #context: Context;
-  #previousContext: Context;
   #windowElem: HTMLElement;
   #detailsElem: HTMLDetailsElement;
   #summaryElem: HTMLElement;
   #settings: WindowSettings;
   #haveNewSettings: boolean;
-  #needSize: boolean = true;
+  #needSize: boolean;
 
   constructor(settings: WindowSettings) {
     super('div');
@@ -130,6 +129,14 @@ export class WindowNode extends Node {
       ++windowCount;
     }
 
+    if (settings.rect.width === undefined) {
+      settings.rect.width = 400;
+    }
+
+    if (settings.rect.height === undefined) {
+      this.#needSize = true;
+    }
+
     const elem = this.#windowElem;
     let mouseStartX: number;
     let mouseStartY: number;
@@ -149,7 +156,7 @@ export class WindowNode extends Node {
 
     const onMouseUp = (e: MouseEvent) => {
       window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
     };
 
     this.#summaryElem.addEventListener('mousedown', (e) => {
@@ -163,16 +170,24 @@ export class WindowNode extends Node {
     });
 
     this.#summaryElem.addEventListener('click', (e) => {
-      if (e.offsetX > 20) {
+      //if (e.offsetX > 20) {
         e.preventDefault();
-      }
+      //}
+      /*
+      this.#settings.active = !this.#settings.active;
+      this.#haveNewSettings = true;
+      */
     });
 
+    // FIX: We shouldn't use css:resize and resize observer.
+    // we should instead handle this ourselves
     const onResize = () => {
-      const rect = this.#windowElem.getBoundingClientRect();
-      this.#settings.rect.width = rect.width;
-      this.#settings.rect.height = rect.height;
-      this.#haveNewSettings = true;
+      if (!this.#haveNewSettings) {
+        const rect = this.#windowElem.getBoundingClientRect();
+        this.#settings.rect.width = rect.width;
+        this.#settings.rect.height = rect.height;
+        this.#haveNewSettings = true;
+      }
     };
 
     const resizeObserver = new ResizeObserver(onResize);
@@ -200,7 +215,12 @@ export class WindowNode extends Node {
   update(settings: WindowSettings) {
     if (this.#haveNewSettings) {
       this.#haveNewSettings = false;
+      // FIX: got to be a better way
+      const rect = settings.rect;
       Object.assign(settings, this.#settings);
+      settings.rect = rect;
+      Object.assign(rect, this.#settings.rect);
+      this._updateRect();
     }
     else
     {
@@ -216,6 +236,7 @@ export class WindowNode extends Node {
         if (this.#settings.active !== active) {
           this.#settings.active = active;
           this.#detailsElem.open = !!active;
+          this._updateRect();
         }
       }
       {
@@ -223,19 +244,24 @@ export class WindowNode extends Node {
         if (!areRectsEqual(rect, this.#settings.rect)) {
           {
             const displayRect = this.#windowElem.getBoundingClientRect();
-            rect.left   === undefined ? displayRect.left   : rect.left;
-            rect.top    === undefined ? displayRect.top    : rect.top;
-            rect.width  === undefined ? displayRect.width  : rect.width;
-            rect.height === undefined ? displayRect.height : rect.height;
+            rect.left   = rect.left   === undefined ? displayRect.left   : rect.left;
+            rect.top    = rect.top    === undefined ? displayRect.top    : rect.top;
+            rect.width  = rect.width  === undefined ? displayRect.width  : rect.width;
+            rect.height = rect.height === undefined ? displayRect.height : rect.height;
           }
           Object.assign(this.#settings.rect, rect);
-          this.#windowElem.style.width = px(rect.width) + 6;
-          this.#windowElem.style.height = px(rect.height) + 6;
-          this.#windowElem.style.left = px(rect.left);
-          this.#windowElem.style.top = px(rect.top);
+          this._updateRect();
         }
       }
     }
+  }
+
+  _updateRect() {
+    const rect = this.#settings.rect;
+    this.#windowElem.style.width = px(rect.width);
+    this.#windowElem.style.height = this.#settings.active ? px(rect.height) : '';
+    this.#windowElem.style.left = px(rect.left);
+    this.#windowElem.style.top = px(rect.top);
   }
 
   begin() {
@@ -245,36 +271,15 @@ export class WindowNode extends Node {
   end = () => {
     if (this.#needSize) {
       this.#needSize = false;
-      const rect = this.#windowElem.getBoundingClientRect();
       if (this.#settings.rect.width === undefined) {
-        this.#settings.rect.width = rect.width;
+        this.#settings.rect.width = this.#windowElem.scrollWidth;
         this.#haveNewSettings = true;
       }
-      if (this.#settings.rect.height === undefined) {
-        this.#settings.rect.height = rect.height;
-        this.#haveNewSettings = true;
-      }
-      /*
-      this.#windowElem.style.width = px(Math.max(400, rect.width + 6));
-      this.#windowElem.style.height = px(rect.height + 6);
-      this._updateRect();
-      */
-    }
-    Context.popContext();
-  }
-
-  _updateRect() {
-    /*
-    const rect = this.#windowElem.getBoundingClientRect();
-    if (!areRectsEqual(rect, this.#settings.rect)) {
-      // FIX: hardcoded padding
-      this.#settings.rect.left = rect.left;
-      this.#settings.rect.top = rect.top;
-      this.#settings.rect.width = rect.width;
-      this.#settings.rect.height = rect.height;
+      // FIX: remove the 6
+      this.#settings.rect.height = this.#windowElem.scrollHeight + 6;
       this.#haveNewSettings = true;
     }
-    */
+    Context.popContext();
   }
 }
 

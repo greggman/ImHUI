@@ -1,6 +1,8 @@
 # TO DO
 
 * Clean up unused elements
+* Stop using details/summary
+* Stop using css:resize
 * how to specify window size?
 * how to specify row height
 * remember window pos/size (as it is we're letting css: resize
