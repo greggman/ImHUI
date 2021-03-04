@@ -4,28 +4,25 @@ import {text} from './text.js';
 
 export class BasicWrapperNode extends Node {
   #context: Context;
-  #previousContext: Context;
 
-  constructor(className: string) {
-    super();
-    this.elem = e('div', {className});
+  constructor() {
+    super('div');
     this.#context = new Context(this.elem, this.end);
   }
 
-  begin() {
-    this.#previousContext = context;
-    Context.setCurrentContext(this.#context);
-    context.start();
+  begin(className: string) {
+    this.setClassName(className);
+    Context.pushContext(this.#context);
   }
 
   end = () => {
-    Context.setCurrentContext(this.#previousContext);
+    Context.popContext();
   }
 }
 
 export function beginWrapper(className: string) {
-  const node = context.getExistingNodeOrRemove<BasicWrapperNode>(BasicWrapperNode, className);
-  node.begin();
+  const node = context.getExistingNodeOrRemove<BasicWrapperNode>(BasicWrapperNode);
+  node.begin(className);
 }
 
 export function endWrapper() {

@@ -113,6 +113,8 @@ canvas {
 }
 .window>details>summary {
   margin: 3px;
+  user-select: none;
+  cursor: pointer;
 }
 /* --------------------------- */
 .form-line {

@@ -9,17 +9,15 @@ import {text} from './text.js';
 import { beginWrapper, endWrapper } from './child.js';
 
 class InputTextNode extends Node {
-  #inputElem: HTMLInputElement;
   #value: string;
   #haveNewValue: boolean = false;
 
   constructor(value: string) {
-    super();
-    this.#value = value;
-    this.#inputElem = <HTMLInputElement>e('input', {type: 'text', value: this.#value});
-    this.elem = this.#inputElem,
-    this.#inputElem.addEventListener('input', (e) => {
-      this.#value = this.#inputElem.value;
+    super('input');
+    const inputElem = <HTMLInputElement>this.elem;
+    inputElem.type = 'text';
+    inputElem.addEventListener('input', (e) => {
+      this.#value = inputElem.value;
       this.#haveNewValue = true;
       queueUpdate();
     });
@@ -33,7 +31,7 @@ class InputTextNode extends Node {
     } else {
       if (value !== this.#value) {
         this.#value = value;
-        this.#inputElem.value = value;
+        (<HTMLInputElement>this.elem).value = value;
       }
     }
     return value;

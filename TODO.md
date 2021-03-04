@@ -3,6 +3,8 @@
 * Clean up unused elements
 * how to specify window size?
 * how to specify row height
+* remember window pos/size (as it is we're letting css: resize
+  handle it but when a window gets resized we lose that info.
 * should window height be auto fit for content
   * how to specify that
   * how to specify min/max window size

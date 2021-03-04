@@ -13,10 +13,10 @@ class CanvasNode extends Node {
   #ctx: CanvasRenderingContext2D;
 
   constructor() {
-    super();
-    this.#canvasElem = <HTMLCanvasElement>e('canvas', {className: 'fill-space'});
+    super('canvas');
+    this.setClassName('fill-space');
+    this.#canvasElem = <HTMLCanvasElement>this.elem;
     this.#ctx =this.#canvasElem.getContext('2d');
-    this.elem = this.#canvasElem;
     const resizeObserver = new ResizeObserver(queueUpdate);
     resizeObserver.observe(this.elem);
   }

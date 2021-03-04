@@ -91,6 +91,8 @@ good parts of Dear ImGUI come from the concept of an ImGUI vs just
 come from the fact that the other wrote some nice tools you can build
 on.
 
+There are lots of issues. It is **NOT READY TO USED IN OTHER PROJECTS**
+
 ## **Requires ES2019**
 
 At the moment no effort has been made to make it run on anything other
