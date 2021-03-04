@@ -30,23 +30,19 @@ export class Node {
     }
 }
 ;
-const stack = [];
 const noop = () => { };
 const contextStack = [];
 export class Context {
     constructor(elem, finishFn = noop) {
         this.#currentChildrenByKey = new Map();
         this.#currentUsedKeys = new Set();
-        this.#children = [];
         this.#currentKey = 0;
         this.#currentElem = elem;
         this.#finishFn = finishFn;
     }
     #currentElem;
-    #currentParent;
     #currentChildrenByKey;
     #currentUsedKeys;
-    #children;
     #currentKey;
     #finishFn;
     getExistingNodeOrRemove(ctor, ...args) {
@@ -80,15 +76,6 @@ export class Context {
         }
         this.#finishFn();
     }
-    /*
-    static setCurrentContext(newContext: Context) {
-      context = newContext;
-    }
-  
-    static getCurrentContext(): Context {
-      return context;
-    }
-    */
     static pushContext(newContext) {
         contextStack.push(context);
         context = newContext;
