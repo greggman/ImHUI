@@ -21,7 +21,7 @@ This has pluses and minus.
 
 The minus is it's likely not as fast as Dear ImGUI (or other ImGUI)
 libraries, especially if you've got a complex UI that updates at 60fps.
-On the other hand it might actually be faster for certain case.
+On the other hand it might actually be faster for certain cases.
 
 The pluses are
 
@@ -38,7 +38,7 @@ The pluses are
 * Supports all of Unicode
 
   Most ImGUI libraries only handle a small number of glyphs.
-  They may or may not handle colored emoji 🍎🍐🍇🐯🐻🦁🦁😉🤣
+  They may or may not handle colored emoji 🍎🍐🍇🐯🐻🦁👾😉🤣
   or Japanese(日本語), Korean(한국어), Chinese(汉语). I don't think
   any handle right to left languages like Arabic(عربي).
 
